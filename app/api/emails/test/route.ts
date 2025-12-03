@@ -3,7 +3,7 @@ import { envoyerEmailVerification } from "@/lib/email";
 
 export async function GET() {
   try {
-    // ↳ Mets ton email ici pour tester
+    
     const email = "khadimcisse00@gmail.com";
 
     const lien = "https://google.com";

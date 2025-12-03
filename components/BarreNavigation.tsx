@@ -52,6 +52,7 @@ export function BarreNavigation() {
               </li>
               <li>
                 <Link href="/historique">Historique</Link>
+                <Link href="/test">Test</Link>
               </li>
               <li>
                 <form action="/api/auth/deconnexion" method="post">
@@ -62,6 +63,8 @@ export function BarreNavigation() {
           </div>
         ) : (
           <div className="flex gap-2">
+                            <Link href="/test">Test</Link>
+
             <Link href="/connexion" className="btn btn-ghost">
               Connexion
             </Link>

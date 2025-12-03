@@ -21,5 +21,5 @@ io.on("connection", (socket) => {
 });
 
 httpServer.listen(3001, () => {
-  console.log("Socket.IO serveur sur http://localhost:3001");
+  console.log("Socket.IO serveur sur http://localhost:3000");
 });

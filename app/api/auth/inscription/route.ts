@@ -5,12 +5,11 @@ import { envoyerEmailVerification } from "@/lib/email";
 import crypto from "crypto";
 
 export async function POST(req: NextRequest) {
-  try {
-    // Récupération des données envoyées par le frontend
-    const { nom, prenom, email, pseudo, motDePasse, avatar } =
-      await req.json();
+  console.log("test");
 
-    // Vérification des champs obligatoires
+  try {
+    const { nom, prenom, email, pseudo, motDePasse, avatar } = await req.json();
+
     if (!nom || !prenom || !email || !pseudo || !motDePasse || !avatar) {
       return NextResponse.json(
         { message: "Champs manquants" },
@@ -18,38 +17,29 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Vérification email déjà existant
-    const deja = await prisma.utilisateur.findUnique({
-      where: { email },
-    });
+    const deja = await prisma.utilisateur.findUnique({ where: { email } });
 
     if (deja) {
       return NextResponse.json(
-        {
-          message: "Un compte existe déjà avec cet email.",
-          code: "EMAIL_EXISTE",
-        },
+        { message: "Un compte existe déjà avec cet email.", code: "EMAIL_EXISTE" },
         { status: 400 }
       );
     }
 
-    // Hash du mot de passe
     const hash = await hacherMotDePasse(motDePasse);
 
-    // Création de l'utilisateur non vérifié
     const utilisateur = await prisma.utilisateur.create({
       data: {
         nom,
         prenom,
         email,
         pseudo,
-        motDePasse: hash, // ⚠️ correspond au champ du schema Prisma
+        motDePasse: hash,
         avatar,
         estVerifie: false,
       },
     });
 
-    // Génération du token
     const valeur = crypto.randomBytes(32).toString("hex");
     const expire = new Date();
     expire.setHours(expire.getHours() + 24);
@@ -63,11 +53,9 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Lien de vérification
     const baseUrl = process.env.NEXT_PUBLIC_URL!;
     const lien = `${baseUrl}/api/auth/verifier?token=${valeur}`;
 
-    // Envoi email de vérification (via RESEND)
     await envoyerEmailVerification(
       utilisateur.email,
       utilisateur.nom,

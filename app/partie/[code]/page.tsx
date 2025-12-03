@@ -12,7 +12,7 @@ import {
   estMatchNul,
   jouerCoup,
 } from "@/lib/tictactoe";
-import { obtenirSocketClient } from "@/lib/socketClient";
+import { obtenirSocketClient } from "@/lib/socket";
 
 export default function PagePartie() {
   const { code } = useParams() as { code: string };
