@@ -9,11 +9,14 @@
     "lint": "next lint",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "mjml": "mjml emails/verification.mjml -o emails/verification.html && mjml emails/reset.mjml -o emails/reset.html"
+    "mjml": "mjml emails/verification.mjml -o emails/verification.html && mjml emails/reset.mjml -o emails/reset.html",
+    "socket": "node server.js",
+    "dev-all": "concurrently \"npm run dev\" \"npm run socket\""
   },
   "dependencies": {
     "@prisma/client": "^5.20.0",
     "bcryptjs": "^2.4.3",
+    "concurrently": "^8.2.2",
     "cookie": "^0.6.0",
     "daisyui": "^4.12.0",
     "jsonwebtoken": "^9.0.2",

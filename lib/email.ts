@@ -3,7 +3,7 @@ import path from "path";
 import mjml2html from "mjml";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.mail_api);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 function chargerTemplateMjml(nom: "verification" | "reset") {
   const fichier = path.join(process.cwd(), "emails", `${nom}.mjml`);
