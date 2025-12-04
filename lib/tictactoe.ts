@@ -2,10 +2,16 @@ export type Symbole = "X" | "O";
 export type CaseGrille = Symbole | "_";
 export type Grille = CaseGrille[];
 
+// ---------------------------------------------------------
+// Créer une grille vide
+// ---------------------------------------------------------
 export function creerGrilleInitiale(): Grille {
   return Array(9).fill("_");
 }
 
+// ---------------------------------------------------------
+// Vérifier victoire
+// ---------------------------------------------------------
 export function verifierVictoire(grille: Grille): Symbole | null {
   const lignes = [
     [0, 1, 2],
@@ -30,16 +36,25 @@ export function verifierVictoire(grille: Grille): Symbole | null {
   return null;
 }
 
+// ---------------------------------------------------------
+// Match nul
+// ---------------------------------------------------------
 export function estMatchNul(grille: Grille): boolean {
   return grille.every((c) => c !== "_") && !verifierVictoire(grille);
 }
 
+// ---------------------------------------------------------
+// Cases disponibles
+// ---------------------------------------------------------
 export function casesDisponibles(grille: Grille): number[] {
   return grille
     .map((c, i) => (c === "_" ? i : -1))
     .filter((i) => i !== -1);
 }
 
+// ---------------------------------------------------------
+// Jouer un coup
+// ---------------------------------------------------------
 export function jouerCoup(
   grille: Grille,
   indice: number,
@@ -51,6 +66,9 @@ export function jouerCoup(
   return copie;
 }
 
+// ---------------------------------------------------------
+// Coup IA FACILE = aléatoire
+// ---------------------------------------------------------
 export function coupIAFacile(grille: Grille): number | null {
   const dispo = casesDisponibles(grille);
   if (dispo.length === 0) return null;
@@ -58,7 +76,13 @@ export function coupIAFacile(grille: Grille): number | null {
   return dispo[index];
 }
 
-function trouverCoupGagnant(grille: Grille, symbole: Symbole): number | null {
+// ---------------------------------------------------------
+// Trouver un coup gagnant
+// ---------------------------------------------------------
+function trouverCoupGagnant(
+  grille: Grille,
+  symbole: Symbole
+): number | null {
   for (const i of casesDisponibles(grille)) {
     const simule = jouerCoup(grille, i, symbole);
     if (verifierVictoire(simule) === symbole) return i;
@@ -66,6 +90,9 @@ function trouverCoupGagnant(grille: Grille, symbole: Symbole): number | null {
   return null;
 }
 
+// ---------------------------------------------------------
+// Coup IA MOYEN
+// ---------------------------------------------------------
 export function coupIAMoyen(
   grille: Grille,
   symboleIA: Symbole,
@@ -73,35 +100,48 @@ export function coupIAMoyen(
 ): number | null {
   const coupGagnant = trouverCoupGagnant(grille, symboleIA);
   if (coupGagnant !== null) return coupGagnant;
+
   const coupBloquant = trouverCoupGagnant(grille, symboleAdverse);
   if (coupBloquant !== null) return coupBloquant;
+
   return coupIAFacile(grille);
 }
 
+// ---------------------------------------------------------
+// Coup IA DIFFICILE
+// ---------------------------------------------------------
 export function coupIADifficile(
   grille: Grille,
   symboleIA: Symbole,
   symboleAdverse: Symbole
 ): number | null {
+  // 1. Jouer centre en priorité
   const coupCentre = 4;
   if (grille[coupCentre] === "_") return coupCentre;
 
+  // 2. Jouer un coin gagnant / stratégique
   const coins = [0, 2, 6, 8].filter((i) => grille[i] === "_");
+
   if (coins.length > 0) {
-    const gagnant.coin = trouverCoupGagnant(grille, symboleIA);
-    if (gagnant.coin !== null) return gagnant.coin;
+    // On teste si un coin mène à une victoire
+    for (const coin of coins) {
+      const simule = jouerCoup(grille, coin, symboleIA);
+      if (verifierVictoire(simule) === symboleIA) return coin;
+    }
   }
 
+  // 3. Coup gagnant immédiat
   const coupGagnant = trouverCoupGagnant(grille, symboleIA);
   if (coupGagnant !== null) return coupGagnant;
 
+  // 4. Bloquer l'adversaire
   const coupBloquant = trouverCoupGagnant(grille, symboleAdverse);
   if (coupBloquant !== null) return coupBloquant;
 
+  // 5. Jouer un coin libre
   const coinsLibres = [0, 2, 6, 8].filter((i) => grille[i] === "_");
-  if (coinsLibres.length > 0) {
-    return coinsLibres[0];
-  }
+  if (coinsLibres.length > 0) return coinsLibres[0];
 
+  // 6. Sinon → mode facile
   return coupIAFacile(grille);
 }

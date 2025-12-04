@@ -18,7 +18,7 @@ function rendreTemplate(
   for (const [cle, valeur] of Object.entries(variables)) {
     resultat = resultat.replace(new RegExp(`{{${cle}}}`, "g"), valeur);
   }
-  const { html } = mjml2html(resultat);
+  const { html } = mjml2html(resultat, { validationLevel: "soft", keepComments: false });
   return html;
 }
 

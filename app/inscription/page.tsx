@@ -28,7 +28,7 @@ export default function PageInscription() {
       return;
     }
 
-    const res = await fetch("/api/test", {
+    const res = await fetch("/api/auth/inscription", {
       method: "POST",
       body: JSON.stringify({
         nom,
