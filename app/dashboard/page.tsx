@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { GamepadIcon, LinkIcon, CpuIcon, HistoryIcon } from "lucide-react";
 
 export default function PageDashboard() {
   const [codePartieRejoindre, setCodePartieRejoindre] = useState("");
@@ -22,67 +23,102 @@ export default function PageDashboard() {
     router.push(`/partie/${codePartieRejoindre}`);
   }
 
-  function jouerContreOrdinateur() {
-    router.push("/ordinateur");
-  }
-
-  function voirHistorique() {
-    router.push("/historique");
-  }
-
   return (
-    <div className="grid gap-4 md:grid-cols-2">
-      <div className="card bg-base-100 shadow">
-        <div className="card-body">
-          <h2 className="card-title">Créer une partie</h2>
-          <p>Générez un code et invitez un ami.</p>
-          <div className="card-actions justify-end">
-            <button className="btn btn-primary" onClick={creerPartie}>
-              Créer
-            </button>
-          </div>
-        </div>
-      </div>
+    <div className="max-w-3xl mx-auto p-4">
+      <h1 className="text-4xl font-bold mb-3 text-center">
+        Bienvenue sur Tic Tac Toe
+      </h1>
 
-      <div className="card bg-base-100 shadow">
-        <div className="card-body">
-          <h2 className="card-title">Rejoindre une partie</h2>
-          <input
-            className="input input-bordered w-full"
-            placeholder="Code de partie"
-            value={codePartieRejoindre}
-            onChange={(e) => setCodePartieRejoindre(e.target.value)}
-          />
-          <div className="card-actions justify-end">
-            <button className="btn btn-secondary" onClick={rejoindrePartie}>
-              Rejoindre
-            </button>
-          </div>
-        </div>
-      </div>
+      <p className="text-center mb-10 text-base-content/70 text-lg">
+        Jouez en ligne, affrontez un ami, l’ordinateur ou consultez votre historique.
+      </p>
 
-      <div className="card bg-base-100 shadow">
-        <div className="card-body">
-          <h2 className="card-title">Jouer contre ordinateur</h2>
-          <p>Choisissez un niveau de difficulté et jouez.</p>
-          <div className="card-actions justify-end">
-            <button className="btn btn-accent" onClick={jouerContreOrdinateur}>
-              Jouer
-            </button>
-          </div>
-        </div>
-      </div>
+      <div className="grid gap-6 md:grid-cols-2">
 
-      <div className="card bg-base-100 shadow">
-        <div className="card-body">
-          <h2 className="card-title">Historique</h2>
-          <p>Consultez vos parties passées.</p>
-          <div className="card-actions justify-end">
-            <button className="btn" onClick={voirHistorique}>
-              Voir l&apos;historique
-            </button>
+        {/* Créer une partie */}
+        <div className="card bg-base-100 shadow-sm border border-base-300">
+          <div className="card-body">
+            <h2 className="card-title flex items-center gap-2">
+              <GamepadIcon size={20} />
+              Créer une partie
+            </h2>
+            <p className="text-base-content/70">
+              Générez un code et commencez une partie en ligne.
+            </p>
+            <div className="card-actions justify-end">
+              <button className="btn btn-neutral" onClick={creerPartie}>
+                Créer
+              </button>
+            </div>
           </div>
         </div>
+
+        {/* Rejoindre une partie */}
+        <div className="card bg-base-100 shadow-sm border border-base-300">
+          <div className="card-body">
+            <h2 className="card-title flex items-center gap-2">
+              <LinkIcon size={20} />
+              Rejoindre une partie
+            </h2>
+
+            <input
+              className="input input-bordered w-full"
+              placeholder="Code de la partie"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              value={codePartieRejoindre}
+              onChange={(e) =>
+                setCodePartieRejoindre(e.target.value.replace(/\D/g, ""))
+              }
+            />
+
+            <div className="card-actions justify-end">
+              <button className="btn btn-outline" onClick={rejoindrePartie}>
+                Rejoindre
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Jouer contre ordinateur */}
+        <div className="card bg-base-100 shadow-sm border border-base-300">
+          <div className="card-body">
+            <h2 className="card-title flex items-center gap-2">
+              <CpuIcon size={20} />
+              Jouer contre l’ordinateur
+            </h2>
+            <p className="text-base-content/70">
+              Affrontez l’IA dans différents niveaux de difficulté.
+            </p>
+            <div className="card-actions justify-end">
+              <button
+                className="btn btn-accent btn-soft"
+                onClick={() => router.push("/ordinateur")}
+              >
+                Jouer
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Historique */}
+        <div className="card bg-base-100 shadow-sm border border-base-300">
+          <div className="card-body">
+            <h2 className="card-title flex items-center gap-2">
+              <HistoryIcon size={20} />
+              Historique
+            </h2>
+            <p className="text-base-content/70">
+              Consultez vos parties passées.
+            </p>
+            <div className="card-actions justify-end">
+              <button className="btn btn-ghost" onClick={() => router.push("/historique")}>
+                Voir
+              </button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );
